@@ -1,134 +1,120 @@
-// Package name: Had l'package kay7dd l'namespace dyal l'app
 package com.example.androidcompose
 
-// Imports: Kayjib les classes w libraries li khassna
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-// Class principale: MainActivity huwa l'entry point dyal l'app Android
-class MainActivity : ComponentActivity() {
-    // Function onCreate: Kaytcall wha l'app tlaunch, bach tset l'UI
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            // Theme: Sta3mel MaterialTheme bach ydir colors w styles dyal Material Design
-            // Comment: Use MaterialTheme direct si ma3andkch HelloCounterTheme custom
-            MaterialTheme {
-                // Surface: Container bach ydir background clean
-                Surface {
-                    // Call l'screen principale
-                    MainScreen()
-                }
-            }
-        }
-    }
-}
-
-// Composable function: MainScreen huwa l'UI principale, kaydir column m3a juj sections
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
-    // Column: Vertical layout bach ystack les elements
+fun LayoutsThemesSimpleDemo() {
+    // Column = layout vertikal (mn fo9 lta7t)
     Column(
-        modifier = modifier
-            .fillMaxSize() // Fill l'screen kaml
-            .padding(16.dp), // Padding mn kul jenb 16dp
-        verticalArrangement = Arrangement.spacedBy(24.dp), // Space bin elements 24dp
-        horizontalAlignment = Alignment.CenterHorizontally // Center horizontally
+        modifier = Modifier
+            .fillMaxSize() // ya5od kol l'écran
+            .padding(24.dp), // space mn l7waf
+        verticalArrangement = Arrangement.spacedBy(24.dp), // space bin l3nasir
+        horizontalAlignment = Alignment.CenterHorizontally // kolchi f center
     ) {
-        // Call sections
-        DireBonjourSection()
-        CompteurSection()
+        GreetingSection()
+        CounterSection()
+        AvatarBox()
     }
 }
 
-// Composable function: Section bach tktb smiytek w t'affichi greeting
 @Composable
-fun DireBonjourSection(modifier: Modifier = Modifier) {
-    // States: rememberSaveable bach y7fD l'data across rotations w configurations
-    var name by rememberSaveable { mutableStateOf("") } // State dyal l'name input
-    var greetingName by rememberSaveable { mutableStateOf<String?>(null) } // State dyal l'greeting, initial null
+fun GreetingSection() {
+    // state bach nkhdmo 3la smiya
+    var name by remember { mutableStateOf("") }
 
-    // Column: Vertical stack, fill width
-    Column(modifier = modifier.fillMaxWidth()) {
-
-        // TextField: Input bach tktb smiytek
-        OutlinedTextField(
-            value = name, // Value mn state
-            onValueChange = { name = it }, // Update state wha tktb
-            label = { Text("Prénom") }, // Label
-            placeholder = { Text("Entre ton prénom") }, // Placeholder
-            singleLine = true, // Single line
-            modifier = Modifier.fillMaxWidth() // Fill width
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Smitk:",
+            style = MaterialTheme.typography.titleMedium
         )
 
-        // Button: Bach tcliki w tset greeting
-        Button(
-            onClick = { greetingName = name.takeIf { it.isNotBlank() } }, // Set greeting law name mhach blank
-            enabled = name.isNotBlank(), // Enabled law name not blank
-            modifier = Modifier.padding(top = 8.dp) // Padding top
-        ) {
-            Text("Dire Bonjour") // Text dyal button
-        }
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Ktob smitk hna") }
+        )
 
-        // Conditional: Law greetingName not null, affich chip
-        if (greetingName != null) {
-            AssistChip(
-                onClick = { /* nothing */ }, // No action on click
-                label = { Text("Bonjour $greetingName") }, // Text m3a name
-                modifier = Modifier.padding(top = 8.dp) // Padding top
+        // Text kaybdel 7asb smit li ktb l user
+        if (name.isNotEmpty()) {
+            Text(
+                text = "Salam $name 👋",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
 }
 
-// Composable function: Section dyal counter m3a + w -
 @Composable
-fun CompteurSection(modifier: Modifier = Modifier) {
-    // State: rememberSaveable bach y7fD l'count
-    var count by rememberSaveable { mutableStateOf(0) } // Initial 0
+fun CounterSection() {
+    var count by remember { mutableStateOf(0) }
 
-    // Row: Horizontal layout bach yalign elements
+    // Row = layout afqi (mn lisar l limn)
     Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically, // Center vertically
-        horizontalArrangement = Arrangement.spacedBy(12.dp) // Space bin elements 12dp
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly, // espace equal bin l3nasir
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        // IconButton -: N9s count law >0
-        IconButton(onClick = { if (count > 0) count-- }) {
-            Icon(imageVector = Icons.Filled.Remove, contentDescription = "Diminuer") // Icon w description
+        // Button - na9s
+        Button(onClick = { if (count > 0) count-- }) {
+            Text("-")
         }
-        // Text: Affich count
+
+        // Text dyal count
         Text(
-            text = "$count", // Convert to string
-            style = MaterialTheme.typography.headlineSmall // Style headline small
+            text = "$count",
+            style = MaterialTheme.typography.headlineSmall
         )
-        // IconButton +: Zid count
-        IconButton(onClick = { count++ }) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = "Augmenter") // Icon w description
+
+        // Button - zid
+        Button(onClick = { count++ }) {
+            Text("+")
         }
     }
 }
 
-// Preview: Bach tshof l'UI f Android Studio bla run l'app
-@Preview(showBackground = true, widthDp = 360)
 @Composable
-fun PreviewMainScreen() {
-    // Wrap f theme w surface bach ykoun realistic
-    MaterialTheme {
-        Surface {
-            MainScreen()
-        }
+fun AvatarBox() {
+    // Box = layering layout (wa7ed fo9 wa7ed)
+    Box(
+        modifier = Modifier
+            .size(100.dp) // taille dyal box
+            .background(Color.LightGray, shape = CircleShape), // sora gray b circle
+        contentAlignment = Alignment.BottomEnd // badge f coin ta7t limn
+    ) {
+        // badge 7mer f coin
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .background(MaterialTheme.colorScheme.error, shape = CircleShape)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLayoutsThemesSimpleDemo() {
+    // Theme basique (Material 3)
+    MaterialTheme(
+        colorScheme = lightColorScheme(
+            primary = Color(0xFF1976D2),
+            secondary = Color(0xFF42A5F5),
+            error = Color(0xFFD32F2F)
+        )
+    ) {
+        LayoutsThemesSimpleDemo()
     }
 }
